@@ -1,3 +1,6 @@
+let humanScore = 0;
+let computerScore = 0;
+
 function getComputerChoice() {
   const random = Math.random();
   if (random < 0.33) {
@@ -9,46 +12,58 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  return prompt("Ingresá tu elección (rock, paper, scissors): ");
-}
-
-let humanScore = 0;
-let computerScore = 0;
-
 function playRound(humanChoice, computerChoice) {
+  const roundResult = document.querySelector("#round-result");
+  const score = document.querySelector("#score");
+  const winner = document.querySelector("#winner");
+
   humanChoice = humanChoice.toLowerCase();
   computerChoice = computerChoice.toLowerCase();
 
   if (humanChoice === computerChoice) {
-    console.log("Empate!");
+    roundResult.textContent = "It's a tie!";
   } else if (
     (humanChoice === "rock" && computerChoice === "scissors") ||
     (humanChoice === "paper" && computerChoice === "rock") ||
     (humanChoice === "scissors" && computerChoice === "paper")
   ) {
-    console.log("You win! Human: " + humanChoice + " Computer: " + computerChoice);
+    roundResult.textContent = `You win! ${humanChoice} beats ${computerChoice}`;
     humanScore++;
   } else {
-    console.log("You lose! Human: " + humanChoice + " Computer: " + computerChoice);
+    roundResult.textContent = `You lose! ${computerChoice} beats ${humanChoice}`;
     computerScore++;
   }
-}
 
-function playGame() {
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
-  playRound(getHumanChoice(), getComputerChoice());
+  score.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
 
-  if (humanScore > computerScore) {
-    console.log("You win the game! " + humanScore + " - " + computerScore);
-  } else if (computerScore > humanScore) {
-    console.log("You lose the game! " + humanScore + " - " + computerScore);
-  } else {
-    console.log("It's a tie! " + humanScore + " - " + computerScore);
+  if (humanScore === 5) {
+    winner.textContent = "🎉 You won the game!";
+    disableButtons();
+  } else if (computerScore === 5) {
+    winner.textContent = "💀 Computer won the game!";
+    disableButtons();
   }
 }
 
-playGame();
+function disableButtons() {
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+}
+
+const rockBtn = document.querySelector("#rock");
+const paperBtn = document.querySelector("#paper");
+const scissorsBtn = document.querySelector("#scissors");
+
+rockBtn.addEventListener("click", () => {
+  playRound("rock", getComputerChoice());
+});
+
+paperBtn.addEventListener("click", () => {
+  playRound("paper", getComputerChoice());
+});
+
+scissorsBtn.addEventListener("click", () => {
+  playRound("scissors", getComputerChoice());
+});
